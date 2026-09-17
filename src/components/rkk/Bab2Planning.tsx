@@ -107,7 +107,6 @@ export const Bab2Planning: React.FC = () => {
   };
 
   const handleDeleteHazard = (id: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus butir identifikasi bahaya ini?')) return;
     updateGlobalState((prev) => ({
       ...prev,
       hazards: {
@@ -116,6 +115,7 @@ export const Bab2Planning: React.FC = () => {
       },
     }));
     addAuditLog('DELETE', 'Bab 2.1 Identifikasi Bahaya', id, 'Menghapus identifikasi bahaya');
+    addNotification('Identifikasi Bahaya Dihapus', 'Butir identifikasi bahaya telah dihapus.', 'INFO');
   };
 
   const handleDuplicateHazard = (item: HazardIdentification) => {
@@ -139,8 +139,6 @@ export const Bab2Planning: React.FC = () => {
   const handleApplyTemplate = () => {
     const tpl = initialTemplates.find((t) => t.id === selectedTemplateId);
     if (!tpl) return;
-
-    if (!confirm(`Terapkan acuan dari "${tpl.name}"? Data referensi akan ditambahkan ke tabel Anda.`)) return;
 
     const importedHazards: HazardIdentification[] = tpl.sampleHazards.map((sh, idx) => ({
       id: 'haz-' + Date.now() + idx,

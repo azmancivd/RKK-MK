@@ -18,6 +18,7 @@ interface RKKPrintA4Props {
 
 export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
   const { currentProject, currentRKK, company, state } = useAppStore();
+  const [showLetterheadOnPages, setShowLetterheadOnPages] = React.useState(true);
 
   if (!currentProject || !currentRKK) {
     return (
@@ -54,6 +55,45 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
     window.print();
   };
 
+  const renderOfficialLetterhead = () => {
+    if (!showLetterheadOnPages) return null;
+    return (
+      <div className="border-b-[3px] border-slate-900 pb-2 mb-6 font-sans">
+        <div className="flex items-center gap-4">
+          {company.logoUrl ? (
+            <img
+              src={company.logoUrl}
+              alt={company.name}
+              className="max-h-16 max-w-28 object-contain shrink-0"
+            />
+          ) : (
+            <div className="w-20 h-14 border border-dashed border-slate-400 rounded flex items-center justify-center text-[9px] text-slate-400 text-center shrink-0">
+              [Logo]
+            </div>
+          )}
+          <div className="flex-1 text-center space-y-0.5">
+            <h2 className="text-sm font-black tracking-wider uppercase text-slate-900 leading-tight">
+              {company.name}
+            </h2>
+            <p className="text-[10px] font-bold uppercase text-slate-700 tracking-wide">
+              PENYEDIA JASA KONSULTANSI KONSTRUKSI PENGAWASAN
+            </p>
+            <p className="text-[9px] text-slate-600 leading-tight">
+              {company.address}
+            </p>
+            <p className="text-[9px] text-slate-500">
+              Telp: {company.phone || '-'} | Email: {company.email || '-'} {company.website ? `| Web: ${company.website}` : ''}
+            </p>
+            <p className="text-[8px] font-mono text-slate-400">
+              NIB: {company.nib || '-'} | No. SBU: {company.sbuNumber || '-'}
+            </p>
+          </div>
+        </div>
+        <div className="border-t-[1px] border-slate-900 mt-1.5" />
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Floating Print Bar (Hidden during actual print) */}
@@ -79,10 +119,21 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
+          <button
+            type="button"
+            onClick={() => setShowLetterheadOnPages(!showLetterheadOnPages)}
+            className={`px-3 py-2 text-xs font-semibold rounded-xl border transition-colors cursor-pointer ${
+              showLetterheadOnPages
+                ? 'bg-blue-600/40 text-blue-200 border-blue-400/50'
+                : 'bg-slate-800 text-slate-400 border-slate-700'
+            }`}
+          >
+            {showLetterheadOnPages ? '✓ Kop Surat Terpasang' : 'Kop Surat Dimatikan'}
+          </button>
           <button
             onClick={handlePrint}
-            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-sm transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>Cetak Dokumen / Simpan PDF</span>
@@ -106,10 +157,20 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
           )}
 
           {/* Top Logo / Header Box */}
-          <div>
-            <div className="w-32 h-20 border-2 border-slate-400 border-dashed rounded-lg mx-auto flex items-center justify-center text-xs text-slate-500 font-sans mb-3">
-              [Logo Perusahaan]
-            </div>
+          <div className="space-y-2">
+            {company.logoUrl ? (
+              <div className="flex justify-center mb-3">
+                <img
+                  src={company.logoUrl}
+                  alt={company.name}
+                  className="max-h-24 max-w-56 object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-32 h-20 border-2 border-slate-400 border-dashed rounded-lg mx-auto flex items-center justify-center text-xs text-slate-500 font-sans mb-3">
+                [Logo Perusahaan]
+              </div>
+            )}
             <h3 className="text-base font-bold tracking-wider uppercase font-sans text-slate-900">
               {company.name}
             </h3>
@@ -167,16 +228,19 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
             PAGE 2: LEMBAR PENGESAHAN RESMI (Format Lampiran D.1 Hal. 118)
            ========================================================================= */}
         <div className="bg-white p-12 sm:p-16 rounded-2xl shadow-md print:shadow-none border border-slate-200 print:border-none min-h-[1050px] flex flex-col justify-between relative print:break-after-page">
-          <div className="text-center space-y-2 border-b-2 border-slate-900 pb-4">
-            <h2 className="text-lg sm:text-xl font-bold font-sans text-slate-900 uppercase">
-              LEMBAR PENGESAHAN
-            </h2>
-            <h3 className="text-sm font-bold font-sans text-slate-800 uppercase">
-              RENCANA KESELAMATAN KONSTRUKSI (RKK) KONSULTANSI KONSTRUKSI PENGAWASAN
-            </h3>
-            <p className="text-xs font-sans text-slate-600 italic">
-              Paket Pekerjaan: {currentProject.packageTitle}
-            </p>
+          <div>
+            {renderOfficialLetterhead()}
+            <div className="text-center space-y-2 border-b-2 border-slate-900 pb-4">
+              <h2 className="text-lg sm:text-xl font-bold font-sans text-slate-900 uppercase">
+                LEMBAR PENGESAHAN
+              </h2>
+              <h3 className="text-sm font-bold font-sans text-slate-800 uppercase">
+                RENCANA KESELAMATAN KONSTRUKSI (RKK) KONSULTANSI KONSTRUKSI PENGAWASAN
+              </h3>
+              <p className="text-xs font-sans text-slate-600 italic">
+                Paket Pekerjaan: {currentProject.packageTitle}
+              </p>
+            </div>
           </div>
 
           {/* Dual Signatures Table (D.1 Hal. 118) */}
@@ -324,6 +388,7 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
            ========================================================================= */}
         <div className="bg-white p-12 sm:p-16 rounded-2xl shadow-md print:shadow-none border border-slate-200 print:border-none min-h-[1050px] font-sans text-xs relative flex flex-col justify-between print:break-after-page">
           <div>
+            {renderOfficialLetterhead()}
             <div className="text-center border-b-2 border-slate-900 pb-3 mb-6">
               <h2 className="text-base font-bold uppercase tracking-wider text-slate-900">
                 1. KEPEMIMPINAN DAN PARTISIPASI TENAGA KERJA DALAM KESELAMATAN KONSTRUKSI

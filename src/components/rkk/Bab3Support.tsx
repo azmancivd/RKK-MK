@@ -83,7 +83,6 @@ export const Bab3Support: React.FC = () => {
   };
 
   const handleDeletePerson = (id: string) => {
-    if (!confirm('Hapus personel ini dari daftar pengawasan?')) return;
     updateGlobalState((prev) => ({
       ...prev,
       personnel: {
@@ -92,6 +91,7 @@ export const Bab3Support: React.FC = () => {
       },
     }));
     addAuditLog('DELETE', 'Bab 3.1 Personel', id, 'Menghapus personel');
+    addNotification('Personel Dihapus', 'Data personel pengawas berhasil dihapus.', 'INFO');
   };
 
   // Calculate Grand Total of 9 Components

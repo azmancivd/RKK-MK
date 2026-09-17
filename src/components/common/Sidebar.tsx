@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'DOKUMEN & PENGATURAN',
       items: [
         { id: 'print-rkk', label: 'Cetak Dokumen Resmi (A4)', icon: FileText },
-        { id: 'company-profile', label: 'Profil Perusahaan Konsultan', icon: Building },
+        { id: 'company-profile', label: 'Kop Surat & Logo Konsultan', icon: Building },
         { id: 'audit-logs', label: 'Audit Trail & Aktivitas', icon: ClipboardList },
         { id: 'app-settings', label: 'Pengaturan & Supabase', icon: Settings },
       ],

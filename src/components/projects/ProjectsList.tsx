@@ -5,6 +5,7 @@ import {
   Search,
   Filter,
   Copy,
+  Trash2,
   Archive,
   ExternalLink,
   Edit2,
@@ -14,6 +15,8 @@ import {
   CheckCircle2,
   Shield,
   Layers,
+  AlertTriangle,
+  X,
 } from 'lucide-react';
 import { useAppStore } from '../../lib/store';
 import { Project, ProjectStatus } from '../../types';
@@ -27,10 +30,11 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
   onSelectProject,
   onOpenCreateProject,
 }) => {
-  const { projects, selectedProjectId, updateGlobalState, addAuditLog } = useAppStore();
+  const { projects, selectedProjectId, updateGlobalState, addAuditLog, addNotification } = useAppStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'value'>('date');
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
 
   // Duplicate Project feature (Section 43)
   const handleDuplicateProject = (sourceProject: Project, e: React.MouseEvent) => {
@@ -166,6 +170,131 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
     addAuditLog('UPDATE', 'Proyek', project.id, `Mengubah status proyek menjadi ${newStatus}`);
   };
 
+  const handleInitiateDelete = (project: Project, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setProjectToDelete(project);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!projectToDelete) return;
+    const project = projectToDelete;
+
+    updateGlobalState((prev) => {
+      let remainingProjects = prev.projects.filter((p) => p.id !== project.id);
+      let newSelectedId =
+        prev.selectedProjectId === project.id
+          ? remainingProjects[0]?.id || ''
+          : prev.selectedProjectId;
+
+      // Clean up project RKK documents and associated maps
+      const newRkkDocs = { ...prev.rkkDocuments };
+      delete newRkkDocs[project.id];
+
+      const newPersonnel = { ...prev.personnel };
+      delete newPersonnel[project.id];
+
+      const newDocs = { ...prev.safetyDocuments };
+      delete newDocs[project.id];
+
+      const newInspections = { ...prev.inspections };
+      delete newInspections[project.id];
+
+      const newFindings = { ...prev.findings };
+      delete newFindings[project.id];
+
+      const newJsa = { ...prev.jsaList };
+      delete newJsa[project.id];
+
+      const newPermits = { ...prev.workPermits };
+      delete newPermits[project.id];
+
+      const newWeekly = { ...prev.weeklyReports };
+      delete newWeekly[project.id];
+
+      const newMonthly = { ...prev.monthlyReports };
+      delete newMonthly[project.id];
+
+      const newTesting = { ...prev.testingList };
+      delete newTesting[project.id];
+
+      // If user deletes the last remaining project, create a fresh blank project template
+      if (remainingProjects.length === 0) {
+        const freshId = 'proj-' + Date.now();
+        const freshProj: Project = {
+          id: freshId,
+          companyId: prev.company.id,
+          projectName: 'Paket Pekerjaan Pengawasan Baru',
+          packageTitle: 'Pengawasan Teknis Penyelenggaraan Konstruksi',
+          location: 'Lokasi Proyek',
+          province: 'Jawa Tengah',
+          regency: 'Kabupaten Kendal',
+          district: 'Kecamatan Kendal',
+          fundingSource: 'APBN',
+          budgetYear: '2026',
+          contractNumber: '01/KTR/SMKK/2026',
+          contractDate: new Date().toISOString().split('T')[0],
+          contractValue: 10000000000,
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '2026-12-31',
+          executionPeriodDays: 240,
+          maintenancePeriodDays: 180,
+          status: 'ACTIVE',
+          clientInstitution: 'Dinas Pekerjaan Umum dan Penataan Ruang',
+          clientOfficerName: 'Kepala Satuan Kerja',
+          clientOfficerPosition: 'Kepala Satker',
+          ppkName: 'Pejabat Pembuat Komitmen',
+          ppkPosition: 'PPK',
+          contractorName: 'PT. Kontraktor Pelaksana',
+          contractorDirector: 'Direktur Utama',
+          consultantName: prev.company.name,
+          teamLeaderName: prev.currentUser.fullName,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: prev.currentUser.id,
+        };
+        const freshRkkId = 'rkk-' + Date.now();
+        newRkkDocs[freshId] = {
+          id: freshRkkId,
+          projectId: freshId,
+          documentNumber: `RKK-MK/2026/${freshId.slice(-4).toUpperCase()}`,
+          rkkNumber: 'RKK-01-REV00',
+          version: 'Rev.00',
+          date: new Date().toISOString().split('T')[0],
+          status: 'DRAFT',
+          preparedBy: `${prev.currentUser.fullName} (Ahli K3 Konstruksi)`,
+          reviewedBy: `${prev.currentUser.fullName} (Team Leader)`,
+          approvedBy: 'PPK Proyek',
+          isLocked: false,
+          qrVerificationCode: `VERIFY-RKK-${freshId}`,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        remainingProjects = [freshProj];
+        newSelectedId = freshId;
+      }
+
+      return {
+        ...prev,
+        projects: remainingProjects,
+        selectedProjectId: newSelectedId,
+        rkkDocuments: newRkkDocs,
+        personnel: newPersonnel,
+        safetyDocuments: newDocs,
+        inspections: newInspections,
+        findings: newFindings,
+        jsaList: newJsa,
+        workPermits: newPermits,
+        weeklyReports: newWeekly,
+        monthlyReports: newMonthly,
+        testingList: newTesting,
+      };
+    });
+
+    addAuditLog('DELETE', 'Proyek', project.id, `Menghapus proyek: ${project.projectName}`);
+    addNotification('Proyek Berhasil Dihapus', `Paket proyek "${project.projectName}" telah dihapus secara permanen.`, 'INFO');
+    setProjectToDelete(null);
+  };
+
   // Filter & Search Logic
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
@@ -292,17 +421,17 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
                   <div className="flex items-center space-x-1" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={(e) => handleDuplicateProject(proj, e)}
-                      title="Duplikasi Struktur Proyek (Section 43)"
-                      className="p-1.5 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                      title="Duplikasi Struktur Proyek"
+                      className="p-1.5 rounded-md text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => handleToggleArchive(proj, e)}
-                      title={proj.status === 'ARCHIVED' ? 'Aktifkan Kembali' : 'Arsipkan Proyek'}
-                      className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                      onClick={(e) => handleInitiateDelete(proj, e)}
+                      title="Hapus Proyek"
+                      className="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                     >
-                      <Archive className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -352,6 +481,66 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Hapus Proyek (In-App Dialog - Tidak terblokir iFrame) */}
+      {projectToDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+          onClick={() => setProjectToDelete(null)}
+        >
+          <div
+            className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3.5">
+                <div className="p-3 bg-rose-100 text-rose-600 rounded-xl shrink-0">
+                  <AlertTriangle className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">Hapus Paket Proyek?</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setProjectToDelete(null)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">Proyek yang akan dihapus:</span>
+              <p className="text-sm font-bold text-slate-900">{projectToDelete.projectName}</p>
+              <p className="text-xs text-slate-500">{projectToDelete.packageTitle}</p>
+              <p className="text-[11px] font-mono text-slate-400 mt-1">No: {projectToDelete.contractNumber}</p>
+            </div>
+
+            <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl text-[11px] text-rose-800 leading-relaxed">
+              Seluruh dokumen RKK (Bab 1 s/d Bab 5), rekaman inspeksi, temuan NCR, JSA, dan laporan K3 yang terafiliasi dengan proyek ini akan dihapus secara permanen dari basis data.
+            </div>
+
+            <div className="flex items-center justify-end space-x-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setProjectToDelete(null)}
+                className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                className="flex items-center space-x-1.5 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Ya, Hapus Permanen</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
