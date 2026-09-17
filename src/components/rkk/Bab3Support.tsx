@@ -97,12 +97,12 @@ export const Bab3Support: React.FC = () => {
   // Calculate Grand Total of 9 Components
   const grandTotalSMKK = budgetList.reduce((acc, curr) => acc + curr.totalPrice, 0);
 
-  const formatRupiah = (val: number) => {
+  const formatRupiah = (val?: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       maximumFractionDigits: 0,
-    }).format(val);
+    }).format(val ?? 0);
   };
 
   return (

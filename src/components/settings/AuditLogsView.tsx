@@ -90,7 +90,7 @@ export const AuditLogsView: React.FC = () => {
               {filteredLogs.map((log) => (
                 <tr key={log.id} className="hover:bg-slate-50/70">
                   <td className="p-3 text-[11px] text-slate-500 font-mono">
-                    {new Date(log.timestamp).toLocaleString('id-ID')}
+                    {log.timestamp ? new Date(log.timestamp).toLocaleString('id-ID') : '-'}
                   </td>
                   <td className="p-3">
                     <p className="font-bold text-slate-900">{log.userName}</p>

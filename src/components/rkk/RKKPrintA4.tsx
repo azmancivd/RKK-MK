@@ -42,12 +42,12 @@ export const RKKPrintA4: React.FC<RKKPrintA4Props> = ({ onBack }) => {
 
   const grandTotalSMKK = budgets.reduce((acc, curr) => acc + curr.totalPrice, 0);
 
-  const formatRupiah = (val: number) => {
+  const formatRupiah = (val?: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       maximumFractionDigits: 0,
-    }).format(val);
+    }).format(val ?? 0);
   };
 
   const handlePrint = () => {

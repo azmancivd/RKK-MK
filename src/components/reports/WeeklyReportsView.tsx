@@ -156,7 +156,7 @@ export const WeeklyReportsView: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block">Jam Selamat</span>
-                  <span className="text-base font-black text-indigo-600 font-mono">{report.safeManHours.toLocaleString()} Jam</span>
+                  <span className="text-base font-black text-indigo-600 font-mono">{(report.safeManHours ?? 0).toLocaleString()} Jam</span>
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block">Kecelakaan (Accident)</span>

@@ -85,7 +85,7 @@ export const FinalEvaluationView: React.FC = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-1">
           <span className="text-xs font-bold text-slate-400 uppercase">Akumulasi Jam Selamat</span>
           <p className="text-2xl font-black text-indigo-700 font-mono">
-            {formData.totalSafeManHours.toLocaleString()}
+            {(formData?.totalSafeManHours ?? 0).toLocaleString()}
           </p>
           <span className="text-[11px] text-slate-500">Jam Orang Tanpa Kecelakaan</span>
         </div>

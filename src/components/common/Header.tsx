@@ -87,10 +87,14 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Right: Actions, Role Switcher, Database status, Notifications */}
       <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Supabase / Live DB or Demo indicator */}
-        <div className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-          <Database className="w-3.5 h-3.5 text-blue-600" />
-          <span>{isSupabaseConfigured ? 'Supabase Live' : 'Database Lokal'}</span>
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-1" />
+        <div
+          onClick={() => onNavigate('pengaturan-aplikasi')}
+          className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 cursor-pointer hover:bg-emerald-100 transition-colors"
+          title="Data otomatis tersimpan secara persisten. Klik untuk pengaturan database."
+        >
+          <Database className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="font-semibold">{isSupabaseConfigured ? 'Cloud Sync Aktif' : 'Tersimpan Persisten'}</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
         </div>
 
         {/* Role Switcher */}

@@ -31,6 +31,11 @@ export const Bab1Commitment: React.FC = () => {
   const [newPoint, setNewPoint] = useState('');
   const [isSaved, setIsSaved] = useState(false);
 
+  React.useEffect(() => {
+    setFormData(currentCommitment);
+    setPoints(currentCommitment.commitmentPoints || []);
+  }, [rkkId, currentCommitment?.id]);
+
   const handleAddPoint = () => {
     if (!newPoint.trim()) return;
     setPoints([...points, newPoint.trim()]);

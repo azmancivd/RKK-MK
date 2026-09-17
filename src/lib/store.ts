@@ -144,15 +144,28 @@ const defaultState: AppState = {
 };
 
 // Global Store Hook
-let globalState = loadState();
-const listeners = new Set<() => void>();
+const BACKUP_STORAGE_KEY = 'rkk_mk_app_data_v1_backup';
+let lastSavedTimestamp = Date.now();
 
 function loadState(): AppState {
+  if (typeof window === 'undefined') return defaultState;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      return { ...defaultState, ...parsed };
+      if (parsed && typeof parsed === 'object' && parsed.projects) {
+        return { ...defaultState, ...parsed };
+      }
+    }
+    // Fallback to secondary backup if primary storage is missing or invalid
+    const backupRaw = localStorage.getItem(BACKUP_STORAGE_KEY);
+    if (backupRaw) {
+      const parsedBackup = JSON.parse(backupRaw);
+      if (parsedBackup && typeof parsedBackup === 'object' && parsedBackup.projects) {
+        // Re-seed primary
+        localStorage.setItem(STORAGE_KEY, backupRaw);
+        return { ...defaultState, ...parsedBackup };
+      }
     }
   } catch (e) {
     console.error('Error loading stored state:', e);
@@ -160,16 +173,45 @@ function loadState(): AppState {
   return defaultState;
 }
 
+let globalState = loadState();
+const listeners = new Set<() => void>();
+
 function saveState(newState: AppState) {
+  if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+    const serialized = JSON.stringify(newState);
+    localStorage.setItem(STORAGE_KEY, serialized);
+    localStorage.setItem(BACKUP_STORAGE_KEY, serialized);
+    lastSavedTimestamp = Date.now();
   } catch (e) {
-    console.error('Error saving state:', e);
+    console.error('Error saving state to localStorage:', e);
   }
 }
 
 function notifyListeners() {
   listeners.forEach((listener) => listener());
+}
+
+// Cross-tab synchronization
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event) => {
+    if (event.key === STORAGE_KEY && event.newValue) {
+      try {
+        const remoteState = JSON.parse(event.newValue);
+        if (remoteState && remoteState.projects) {
+          globalState = { ...defaultState, ...remoteState };
+          lastSavedTimestamp = Date.now();
+          notifyListeners();
+        }
+      } catch (err) {
+        console.error('Cross-tab sync parse error:', err);
+      }
+    }
+  });
+}
+
+export function getLastSavedTime() {
+  return lastSavedTimestamp;
 }
 
 export function updateGlobalState(updater: (prev: AppState) => AppState) {
@@ -265,6 +307,7 @@ export function useAppStore() {
 
   const resetToDemoData = () => {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(BACKUP_STORAGE_KEY);
     globalState = defaultState;
     saveState(globalState);
     notifyListeners();
@@ -284,6 +327,7 @@ export function useAppStore() {
     addNotification,
     resetToDemoData,
     updateGlobalState,
+    getLastSavedTime,
   };
 }
 
