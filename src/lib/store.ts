@@ -139,7 +139,7 @@ const defaultState: AppState = {
   },
   auditLogs: initialAuditLogs,
   notifications: initialNotifications,
-  isDemoMode: true,
+  isDemoMode: false,
   isOffline: false,
 };
 

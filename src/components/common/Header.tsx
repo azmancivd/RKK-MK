@@ -8,7 +8,6 @@ import {
   Menu,
   ChevronDown,
   UserCheck,
-  RotateCcw,
 } from 'lucide-react';
 import { useAppStore } from '../../lib/store';
 import { UserRole } from '../../types';
@@ -32,7 +31,6 @@ export const Header: React.FC<HeaderProps> = ({
     selectProject,
     currentUser,
     switchUserRole,
-    resetToDemoData,
   } = useAppStore();
 
   const [showRoleMenu, setShowRoleMenu] = useState(false);
@@ -177,16 +175,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
         </div>
-
-        {/* Reset Demo Button */}
-        <button
-          onClick={resetToDemoData}
-          title="Reset Data Demo"
-          className="hidden lg:flex items-center space-x-1 px-2.5 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200"
-        >
-          <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-          <span>Reset Demo</span>
-        </button>
 
         {/* Primary Action */}
         <button

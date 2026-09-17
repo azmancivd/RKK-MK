@@ -264,7 +264,7 @@ export const JSAList: React.FC = () => {
                   <input
                     type="text"
                     required
-                    value={formData.jsaNumber}
+                    value={formData.jsaNumber || ''}
                     onChange={(e) => setFormData({ ...formData, jsaNumber: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono font-bold"
                   />
@@ -273,7 +273,7 @@ export const JSAList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Tahapan / Kategori Pekerjaan</label>
                   <input
                     type="text"
-                    value={formData.workStage}
+                    value={formData.workStage || ''}
                     onChange={(e) => setFormData({ ...formData, workStage: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -285,7 +285,7 @@ export const JSAList: React.FC = () => {
                 <input
                   type="text"
                   required
-                  value={formData.jobName}
+                  value={formData.jobName || ''}
                   onChange={(e) => setFormData({ ...formData, jobName: e.target.value })}
                   placeholder="Contoh: Pemasangan Girder Precast Jembatan dengan Crane 50 Ton"
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg font-semibold"
@@ -297,7 +297,7 @@ export const JSAList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Lokasi Pekerjaan</label>
                   <input
                     type="text"
-                    value={formData.location}
+                    value={formData.location || ''}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -306,7 +306,7 @@ export const JSAList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Tanggal Berlaku</label>
                   <input
                     type="date"
-                    value={formData.date}
+                    value={formData.date || ''}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -347,7 +347,7 @@ export const JSAList: React.FC = () => {
                         <input
                           type="text"
                           placeholder="Tahapan kegiatan..."
-                          value={item.workStep}
+                          value={item.workStep || ''}
                           onChange={(e) => {
                             const copy = [...items];
                             copy[idx].workStep = e.target.value;
@@ -358,7 +358,7 @@ export const JSAList: React.FC = () => {
                         <input
                           type="text"
                           placeholder="Potensi bahaya..."
-                          value={item.hazard}
+                          value={item.hazard || ''}
                           onChange={(e) => {
                             const copy = [...items];
                             copy[idx].hazard = e.target.value;
@@ -372,7 +372,7 @@ export const JSAList: React.FC = () => {
                         <input
                           type="text"
                           placeholder="Risiko paparan..."
-                          value={item.risk}
+                          value={item.risk || ''}
                           onChange={(e) => {
                             const copy = [...items];
                             copy[idx].risk = e.target.value;
@@ -383,7 +383,7 @@ export const JSAList: React.FC = () => {
                         <input
                           type="text"
                           placeholder="Tindakan pengendalian mitigasi..."
-                          value={item.controlMeasure}
+                          value={item.controlMeasure || ''}
                           onChange={(e) => {
                             const copy = [...items];
                             copy[idx].controlMeasure = e.target.value;

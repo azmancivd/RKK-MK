@@ -248,7 +248,7 @@ export const InspectionsList: React.FC = () => {
                   <input
                     type="date"
                     required
-                    value={formData.inspectionDate}
+                    value={formData.inspectionDate || ''}
                     onChange={(e) => setFormData({ ...formData, inspectionDate: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -256,7 +256,7 @@ export const InspectionsList: React.FC = () => {
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Cuaca Lapangan</label>
                   <select
-                    value={formData.weather}
+                    value={formData.weather || 'Cerah'}
                     onChange={(e) => setFormData({ ...formData, weather: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg bg-white"
                   >
@@ -273,7 +273,7 @@ export const InspectionsList: React.FC = () => {
                 <input
                   type="text"
                   required
-                  value={formData.location}
+                  value={formData.location || ''}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   placeholder="Contoh: Gedung A Lantai 4 & Area Fabrikasi Besi"
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
@@ -285,7 +285,7 @@ export const InspectionsList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Nama Pengawas (Inspektur)</label>
                   <input
                     type="text"
-                    value={formData.inspectorName}
+                    value={formData.inspectorName || ''}
                     onChange={(e) => setFormData({ ...formData, inspectorName: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -294,7 +294,7 @@ export const InspectionsList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Perwakilan Kontraktor</label>
                   <input
                     type="text"
-                    value={formData.contractorRepresentative}
+                    value={formData.contractorRepresentative || ''}
                     onChange={(e) =>
                       setFormData({ ...formData, contractorRepresentative: e.target.value })
                     }
@@ -307,7 +307,7 @@ export const InspectionsList: React.FC = () => {
                 <label className="block font-bold text-slate-700 mb-1">Ringkasan Hasil Pemeriksaan</label>
                 <textarea
                   rows={2}
-                  value={formData.summary}
+                  value={formData.summary || ''}
                   onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                 />

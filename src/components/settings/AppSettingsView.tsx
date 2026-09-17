@@ -24,8 +24,7 @@ import {
 } from '../../lib/supabase';
 
 export const AppSettingsView: React.FC = () => {
-  const { state, resetToDemoData, addNotification, addAuditLog, updateGlobalState } = useAppStore();
-  const [isResetting, setIsResetting] = useState(false);
+  const { state, addNotification, addAuditLog, updateGlobalState } = useAppStore();
 
   // Supabase form state
   const currentConfig = getSupabaseConfig();
@@ -67,16 +66,6 @@ export const AppSettingsView: React.FC = () => {
       }
     } finally {
       setIsTesting(false);
-    }
-  };
-
-  const handleReset = () => {
-    if (window.confirm('Apakah Anda yakin ingin mengembalikan seluruh data ke setelan awal default (demo data)?')) {
-      setIsResetting(true);
-      resetToDemoData();
-      addAuditLog('UPDATE', 'System Settings', 'RESET', 'Mereset data aplikasi ke data bawaan demo');
-      addNotification('Data Direset', 'Seluruh data telah dikembalikan ke setelan demo default.', 'INFO');
-      setTimeout(() => setIsResetting(false), 500);
     }
   };
 
@@ -316,15 +305,6 @@ export const AppSettingsView: React.FC = () => {
             <span>Impor / Pulihkan Backup JSON</span>
             <input type="file" accept=".json" onChange={handleImportData} className="hidden" />
           </label>
-
-          <button
-            onClick={handleReset}
-            disabled={isResetting}
-            className="flex items-center justify-center space-x-2 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-colors"
-          >
-            <RefreshCw className={`w-4 h-4 ${isResetting ? 'animate-spin' : ''}`} />
-            <span>Reset ke Data Demo Default</span>
-          </button>
         </div>
       </div>
 

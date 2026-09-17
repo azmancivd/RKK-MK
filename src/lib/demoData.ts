@@ -38,6 +38,7 @@ export const initialCompany: Company = {
   website: 'https://mitrapengawas.co.id',
   directorName: 'Ir. Bambang Trihatmojo, M.Eng.',
   authorizedRepName: 'Ir. Hendra Wijaya, ST., MT.',
+  sbuNumber: 'SBU-01928/LPJK/2024',
   logoUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f8?w=200&auto=format&fit=crop&q=60',
   createdAt: '2024-01-10T08:00:00Z',
   updatedAt: '2026-09-17T08:00:00Z',

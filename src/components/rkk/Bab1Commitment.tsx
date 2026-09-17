@@ -158,7 +158,7 @@ export const Bab1Commitment: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Kota Penandatanganan</label>
               <input
                 type="text"
-                value={formData.city}
+                value={formData.city || ''}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                 className="w-full text-xs p-2 border border-slate-300 rounded-lg"
               />
@@ -167,7 +167,7 @@ export const Bab1Commitment: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Tanggal</label>
               <input
                 type="date"
-                value={formData.date}
+                value={formData.date || ''}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 className="w-full text-xs p-2 border border-slate-300 rounded-lg"
               />
@@ -176,7 +176,7 @@ export const Bab1Commitment: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Nama Kepala Pengawas Pekerjaan *</label>
               <input
                 type="text"
-                value={formData.headSupervisorName}
+                value={formData.headSupervisorName || ''}
                 onChange={(e) => setFormData({ ...formData, headSupervisorName: e.target.value })}
                 className="w-full text-xs p-2 border border-slate-300 rounded-lg font-bold"
               />

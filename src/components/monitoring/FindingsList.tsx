@@ -395,7 +395,7 @@ export const FindingsList: React.FC = () => {
                   <input
                     type="text"
                     required
-                    value={newFinding.findingNumber}
+                    value={newFinding.findingNumber || ''}
                     onChange={(e) => setNewFinding({ ...newFinding, findingNumber: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono font-bold"
                   />
@@ -403,7 +403,7 @@ export const FindingsList: React.FC = () => {
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Tingkat Prioritas Risiko</label>
                   <select
-                    value={newFinding.priority}
+                    value={newFinding.priority || 'SEDANG'}
                     onChange={(e) =>
                       setNewFinding({ ...newFinding, priority: e.target.value as PriorityLevel })
                     }
@@ -422,7 +422,7 @@ export const FindingsList: React.FC = () => {
                 <input
                   type="text"
                   required
-                  value={newFinding.location}
+                  value={newFinding.location || ''}
                   onChange={(e) => setNewFinding({ ...newFinding, location: e.target.value })}
                   placeholder="Contoh: Kolom Lantai 3 Zona Barat atau Perancah Luar"
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
@@ -434,7 +434,7 @@ export const FindingsList: React.FC = () => {
                 <textarea
                   rows={3}
                   required
-                  value={newFinding.description}
+                  value={newFinding.description || ''}
                   onChange={(e) => setNewFinding({ ...newFinding, description: e.target.value })}
                   placeholder="Deskripsikan kondisi tidak aman (Unsafe Condition) atau perilaku tidak aman (Unsafe Act) yang ditemukan..."
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
@@ -447,7 +447,7 @@ export const FindingsList: React.FC = () => {
                 </label>
                 <textarea
                   rows={2}
-                  value={newFinding.correctiveActionPlan}
+                  value={newFinding.correctiveActionPlan || ''}
                   onChange={(e) => setNewFinding({ ...newFinding, correctiveActionPlan: e.target.value })}
                   placeholder="Contoh: Pasang safety net dan pasang toe board perancah sebelum pekerjaan berlanjut."
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
@@ -459,7 +459,7 @@ export const FindingsList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Penanggung Jawab Perbaikan (PIC)</label>
                   <input
                     type="text"
-                    value={newFinding.pic}
+                    value={newFinding.pic || ''}
                     onChange={(e) => setNewFinding({ ...newFinding, pic: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -469,7 +469,7 @@ export const FindingsList: React.FC = () => {
                   <input
                     type="date"
                     required
-                    value={newFinding.deadline}
+                    value={newFinding.deadline || ''}
                     onChange={(e) => setNewFinding({ ...newFinding, deadline: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />

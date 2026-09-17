@@ -296,7 +296,7 @@ export const PermitsList: React.FC = () => {
                   <input
                     type="text"
                     required
-                    value={newPermit.permitNumber}
+                    value={newPermit.permitNumber || ''}
                     onChange={(e) => setNewPermit({ ...newPermit, permitNumber: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono font-bold"
                   />
@@ -304,7 +304,7 @@ export const PermitsList: React.FC = () => {
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Kategori Pekerjaan Berbahaya</label>
                   <select
-                    value={newPermit.permitType}
+                    value={newPermit.permitType || 'HEIGHT'}
                     onChange={(e) =>
                       setNewPermit({ ...newPermit, permitType: e.target.value as WorkPermitType })
                     }
@@ -326,7 +326,7 @@ export const PermitsList: React.FC = () => {
                 <input
                   type="text"
                   required
-                  value={newPermit.location}
+                  value={newPermit.location || ''}
                   onChange={(e) => setNewPermit({ ...newPermit, location: e.target.value })}
                   placeholder="Contoh: Tangki Reservoir B Bawah Tanah atau Scaffolding Tower A"
                   className="w-full text-xs p-2 border border-slate-300 rounded-lg"
@@ -339,7 +339,7 @@ export const PermitsList: React.FC = () => {
                   <input
                     type="date"
                     required
-                    value={newPermit.startDate}
+                    value={newPermit.startDate || ''}
                     onChange={(e) => setNewPermit({ ...newPermit, startDate: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -349,7 +349,7 @@ export const PermitsList: React.FC = () => {
                   <input
                     type="date"
                     required
-                    value={newPermit.endDate}
+                    value={newPermit.endDate || ''}
                     onChange={(e) => setNewPermit({ ...newPermit, endDate: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -361,7 +361,7 @@ export const PermitsList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Nama Pemohon (Supervisor)</label>
                   <input
                     type="text"
-                    value={newPermit.applicantName}
+                    value={newPermit.applicantName || ''}
                     onChange={(e) => setNewPermit({ ...newPermit, applicantName: e.target.value })}
                     className="w-full text-xs p-2 border border-slate-300 rounded-lg"
                   />
@@ -370,7 +370,7 @@ export const PermitsList: React.FC = () => {
                   <label className="block font-bold text-slate-700 mb-1">Jumlah Personel Bekerja</label>
                   <input
                     type="number"
-                    value={newPermit.workersCount}
+                    value={newPermit.workersCount ?? 1}
                     onChange={(e) =>
                       setNewPermit({ ...newPermit, workersCount: parseInt(e.target.value) || 1 })
                     }

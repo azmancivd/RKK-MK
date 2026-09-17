@@ -21,7 +21,34 @@ import { Company } from '../../types';
 
 export const CompanyProfileView: React.FC = () => {
   const { company, updateGlobalState, addAuditLog, addNotification } = useAppStore();
-  const [formData, setFormData] = useState<Company>(company);
+  const [formData, setFormData] = useState<Company>({
+    ...company,
+    name: company.name || '',
+    directorName: company.directorName || '',
+    address: company.address || '',
+    phone: company.phone || '',
+    email: company.email || '',
+    website: company.website || '',
+    nib: company.nib || '',
+    sbuNumber: company.sbuNumber || '',
+    logoUrl: company.logoUrl || '',
+  });
+
+  React.useEffect(() => {
+    setFormData({
+      ...company,
+      name: company.name || '',
+      directorName: company.directorName || '',
+      address: company.address || '',
+      phone: company.phone || '',
+      email: company.email || '',
+      website: company.website || '',
+      nib: company.nib || '',
+      sbuNumber: company.sbuNumber || '',
+      logoUrl: company.logoUrl || '',
+    });
+  }, [company]);
+
   const [isSaved, setIsSaved] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -296,7 +323,7 @@ export const CompanyProfileView: React.FC = () => {
               <input
                 type="text"
                 required
-                value={formData.name}
+                value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg font-bold"
                 placeholder="Contoh: PT. CIPTA SARANA KONSULTAN"
@@ -309,7 +336,7 @@ export const CompanyProfileView: React.FC = () => {
               <input
                 type="text"
                 required
-                value={formData.directorName}
+                value={formData.directorName || ''}
                 onChange={(e) => setFormData({ ...formData, directorName: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg font-semibold"
                 placeholder="Nama Lengkap & Gelar Direktur"
@@ -324,7 +351,7 @@ export const CompanyProfileView: React.FC = () => {
             <input
               type="text"
               required
-              value={formData.address}
+              value={formData.address || ''}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               className="w-full p-2.5 border border-slate-300 rounded-lg"
               placeholder="Contoh: Jl. Jenderal Sudirman No. 45, Kompleks Perkantoran Puri Indah, Jakarta Pusat 10220"
@@ -336,7 +363,7 @@ export const CompanyProfileView: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Nomor Telepon / Hotline</label>
               <input
                 type="text"
-                value={formData.phone}
+                value={formData.phone || ''}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg"
                 placeholder="(021) 555-1234 / 0812-..."
@@ -346,7 +373,7 @@ export const CompanyProfileView: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Alamat Email Resmi</label>
               <input
                 type="email"
-                value={formData.email}
+                value={formData.email || ''}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg"
                 placeholder="office@konsultan.co.id"
@@ -376,7 +403,7 @@ export const CompanyProfileView: React.FC = () => {
               <label className="block font-bold text-slate-700 mb-1">Nomor Induk Berusaha (NIB)</label>
               <input
                 type="text"
-                value={formData.nib}
+                value={formData.nib || ''}
                 onChange={(e) => setFormData({ ...formData, nib: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg font-mono font-bold"
                 placeholder="Contoh: 9120003456789"
@@ -388,7 +415,7 @@ export const CompanyProfileView: React.FC = () => {
               </label>
               <input
                 type="text"
-                value={formData.sbuNumber}
+                value={formData.sbuNumber || ''}
                 onChange={(e) => setFormData({ ...formData, sbuNumber: e.target.value })}
                 className="w-full p-2.5 border border-slate-300 rounded-lg font-mono font-bold"
                 placeholder="Contoh: SBU-01928/LPJK/2024"
